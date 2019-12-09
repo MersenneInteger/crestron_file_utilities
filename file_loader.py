@@ -88,8 +88,13 @@ if __name__=='__main__':
             login_attempt = ftp_client.login(username, password)
 
         logging.info(f'{datetime.now()}\nlogin attempted: {login_attempt}')
+        
         #change working directory of ftp server to provided directory
-        ftp_client.cwd(directory)
+        if directory in ftp_client.nlst():
+            ftp_client.cwd(directory)
+        else:
+            logging.error(f'Directory {directory} does not exist.')
+            sys.exit(f'Directory {directory} does not exist.')
 
         #disable passive mode
         ftp_client.set_pasv(False)
@@ -109,3 +114,4 @@ if __name__=='__main__':
             logging.info(f'File successfully transferred: {file}')
             print(f'File successfully transferred: {file}')
         logging.info(f'{datetime.now()}\tFinished...\n{"*"*100}')
+
